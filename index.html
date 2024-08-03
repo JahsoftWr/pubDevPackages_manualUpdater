@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flutter: Comprobador de Versiones Multiples</title>
+  <link href="favicon.png" rel="icon" type="image/png">
+  <style>
+    #packageNames {
+      width: 99%;
+    }
+
+    #myTextarea {
+      width: 99%;
+      height: 190px; 
+    }
+
+    body.dark {
+      background-color: #24292e;
+      color: #fff;
+      font-family: sans-serif;
+    }
+
+    .container {
+      max-width: 80%;
+      margin: 0 auto;
+      padding: 20px;
+      border-radius: 5px;
+      background-color: #30363d;
+      /* Fondo ligeramente más oscuro para los elementos */
+    }
+
+    .form-control {
+      background-color: #404449;
+      color: #fff;
+      border: 1px solid #585c62;
+      padding: 10px;
+    }
+
+    .btn {
+      background-color: #28a745;
+      /* Verde GitHub */
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #218838;
+    }
+
+    .results {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #30363d;
+      border-radius: 5px;
+    }
+
+    form label,
+    form input,
+    form button {
+      display: block;
+      margin-bottom: 4px; /* Agrega un margen inferior de 1px a todos los elementos del formulario */
+    }
+
+    .highlight {
+      background-color: #007bff; /* Azul claro */
+      color: white;
+      font-weight: bold;
+      padding: 2px;
+      border-radius: 3px;
+    }
+
+    button::after {
+      content: "\25BC";
+      margin-left: 5px;
+    }
+    /*
+        button[type="submit"]::after {
+          content: "\25BC"; /* Unicode para flecha hacia abajo * /
+          margin-left: 5px;
+        }
+    */
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container">
+    <p>Actualizar manualmente a la ultima version las <mark class="highlight">dependencies</mark> del <mark class="highlight">pubspec.yaml</mark> de una aplicacion Flutter.</p>
+    <textarea id="myTextarea" placeholder="e.g., cupertino_icons,go_router,flutter_animate,provider,http"></textarea></textarea>
+    <br>
+    <button onclick="transformText()">Transform Text</button>
+    <hr>
+    <form id="versionForm" action="version.php" method="POST">
+      <label for="packageNames">Nombres de Paquetes (separados por comas): Ej: cupertino_icons,go_router,flutter_animate,provider,http</label>
+      <input type="text" id="packageNames" name="packageNames"
+        placeholder="e.g., cupertino_icons,go_router,flutter_animate,provider,http">
+      <button type="submit" id="submitButton">Buscar Versiones</button>
+    </form>
+    <hr>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('versionForm');
+    const resultElement = document.getElementById('result');
+    const submitButton = document.getElementById('submitButton');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitButton.disabled = true;
+      const packageNames = document.getElementById('packageNames').value.trim();
+      console.log('Paquetes ingresados:', packageNames); // Log de los paquetes ingresados
+      const packages = packageNames.split(',').map(name => name.trim());
+      const promises = packages.map(packageName => {
+        return fetch('version.php', {
+          method: 'POST',
+          body: new URLSearchParams({ package: packageName })
+        })
+          .then(response => response.text())
+          .then(data => {
+            return { packageName, data };
+          });
+      });
+
+      Promise.all(promises)
+        .then(results => {
+          console.log('Resultados:', results); // Log para verificar los resultados completos         
+          const html = results.map(({ packageName, data }) => { // Crear el HTML con los resultados
+            const parsedData = JSON.parse(data);
+            const version = parsedData.version; // Extrae la versión directamente
+            return `&nbsp;${packageName}: ${version}<br>`; // Agrega espacio y salto de línea
+          }).join('');          
+          resultElement.innerHTML = html;// Actualizar el elemento HTML con el resultado final
+          submitButton.disabled = false;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          resultElement.textContent = 'Ocurrió un error al procesar las solicitudes.';
+          submitButton.disabled = false;
+        });
+    });
+
+    function transformText() {
+      var textarea = document.getElementById("myTextarea");
+      var txpackageNames = document.getElementById("packageNames");
+      var text = textarea.value;
+      text = text.replace(/^\^/, '');
+      text = text.replace(/\^/g, '');
+      var newText = text.replace(/: \d+\.\d+\.\d+/g, ""); // Remove version numbers
+      newText = newText.replace(/\s+/g, ","); // Replace spaces with commas
+      newText = newText.replace(/\^|\+\d+/g, '');      //textarea.value = newText;
+      newText = newText.replace(/\+\d+$|\^/g, '').trim();
+      txpackageNames.value = newText.substring(1);
+    }
+  </script>
+</body>
+
+</html>
