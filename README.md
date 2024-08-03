@@ -5,7 +5,8 @@
 </h2>
 This PHP code consumes the pub.dev/packages API and updates the packages to the latest version:
 <hr>
-<span>https://github.com/JahsoftWr/pubDevPackages_manualUpdater/blob/main/page.png?raw=true</span><span>)</span>
+<span></span>
+<img src="https://github.com/JahsoftWr/pubDevPackages_manualUpdater/blob/main/page.png">
 <hr>
 
 Manually update the pubspec.yaml dependencies of a Flutter application to the latest version.
