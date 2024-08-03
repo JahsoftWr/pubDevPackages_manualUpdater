@@ -1,4 +1,5 @@
 <?php
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $packageName = $_POST['package'];
 
@@ -24,7 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         echo json_encode(['version' => $version]);
     }
+
 } else {
     // Manejar caso de acceso directo (opcional)
     echo "Acceso no válido. Utiliza el formulario.";
 }
+
+?>
