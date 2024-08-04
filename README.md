@@ -5,7 +5,8 @@
 </h2>
 This PHP code consumes the pub.dev/packages API and updates the packages to the latest version:
 <hr>
-<span></span>
+<a href="https://jahsoftwr.github.io/pubDevPackages_manualUpdater/">TRY THE PAGE HERE</a>
+<hr>
 <img src="https://github.com/JahsoftWr/pubDevPackages_manualUpdater/blob/main/page.png">
 <hr>
 
