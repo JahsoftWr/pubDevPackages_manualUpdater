@@ -12,13 +12,13 @@ This PHP code consumes the pub.dev/packages API and updates the packages to the 
 Manually update the pubspec.yaml dependencies of a Flutter application to the latest version.
 <hr>
 
-*** 1° Copy the dependencies from "pubspec.yaml" that you want to update. ***
+[^1]:  Copy the dependencies from "pubspec.yaml" that you want to update. 
 
-*** 2° Paste it into the first "Textarea" and press the "Transform Text" button ***
+[^2]:  Paste it into the first "Textarea" and press the "Transform Text" button 
 
 This will convert the "packages" name to a comma format and load it into the next "input type='text'"
 
-*** 3° Click the next "Browse Versions" button. ***
+[^3]:  Click the next "Browse Versions" button. 
 
 And this will create the "packages" to paste directly into the "pulseen.yaml".
 
